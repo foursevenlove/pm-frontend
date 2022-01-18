@@ -2,39 +2,16 @@
     <div>
         <div class="container">
             <div class="handle-box">
-                <el-select v-model="query.address" placeholder="地址" class="handle-select mr10">
-                    <el-option key="1" label="广东省" value="广东省"></el-option>
-                    <el-option key="2" label="湖南省" value="湖南省"></el-option>
-                </el-select>
-                <el-input v-model="query.name" placeholder="用户名" class="handle-input mr10"></el-input>
+                <el-input v-model="query.searchContent" placeholder="请输入查询内容" class="handle-input mr10"></el-input>
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
-                <el-table-column prop="name" label="用户名"></el-table-column>
-                <el-table-column label="账户余额">
-                    <template #default="scope">￥{{ scope.row.money }}</template>
-                </el-table-column>
-                <el-table-column label="头像(查看大图)" align="center">
-                    <template #default="scope">
-                        <el-image class="table-td-thumb" :src="scope.row.thumb" :preview-src-list="[scope.row.thumb]">
-                        </el-image>
-                    </template>
-                </el-table-column>
-                <el-table-column prop="address" label="地址"></el-table-column>
-                <el-table-column label="状态" align="center">
-                    <template #default="scope">
-                        <el-tag :type="
-                                scope.row.state === '成功'
-                                    ? 'success'
-                                    : scope.row.state === '失败'
-                                    ? 'danger'
-                                    : ''
-                            ">{{ scope.row.state }}</el-tag>
-                    </template>
-                </el-table-column>
+                <el-table-column prop="name" label="姓名" width="100" align="center"></el-table-column>
+                <el-table-column prop="gender" label="性别"  width="55" align="center"></el-table-column>
+                <el-table-column prop="birthday" label="出生日期" align="center"></el-table-column>
+                <el-table-column prop="idCard" label="身份证号" align="center"></el-table-column>
 
-                <el-table-column prop="date" label="注册时间"></el-table-column>
                 <el-table-column label="操作" width="180" align="center">
                     <template #default="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
@@ -45,19 +22,31 @@
                 </el-table-column>
             </el-table>
             <div class="pagination">
-                <el-pagination background layout="total, prev, pager, next" :current-page="query.pageIndex"
-                    :page-size="query.pageSize" :total="pageTotal" @current-change="handlePageChange"></el-pagination>
+                <el-pagination background layout="total, prev, pager, next" v-model:currentPage="query.pageIndex"
+                    :page-size="query.pageSize" :total="2000" @current-change="handlePageChange"></el-pagination>
             </div>
         </div>
 
         <!-- 编辑弹出框 -->
         <el-dialog title="编辑" v-model="editVisible" width="30%">
             <el-form label-width="70px">
-                <el-form-item label="用户名">
-                    <el-input v-model="form.name"></el-input>
+                <el-form-item label="编号">
+                    <el-input v-model="form.id" ></el-input>
                 </el-form-item>
-                <el-form-item label="地址">
-                    <el-input v-model="form.address"></el-input>
+                <el-form-item label="姓名">
+                    <el-input v-model="form.name" ></el-input>
+                </el-form-item>
+                <el-form-item label="性别">
+                    <el-select v-model="form.gender">
+                        <el-option key="男" label="男" value="男"/>
+                        <el-option key="女" label="女" value="女"/>
+                    </el-select>
+                </el-form-item>
+                <el-form-item label="出生日期">
+                    <el-input v-model="form.birthday"></el-input>
+                </el-form-item>
+                <el-form-item label="身份证号">
+                    <el-input v-model="form.idCard"></el-input>
                 </el-form-item>
             </el-form>
             <template #footer>
@@ -73,24 +62,24 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { fetchData } from "../../api/index";
+import { fetchData, updateBasic } from "../../api/index";
+import axios from 'axios';
+// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 设置post提交数据的格式
 
 export default {
     name: "basetable",
     setup() {
         const query = reactive({
-            address: "",
-            name: "",
+            searchContent: "",
             pageIndex: 1,
             pageSize: 10,
         });
         const tableData = ref([]);
-        const pageTotal = ref(0);
         // 获取表格数据
         const getData = () => {
-            fetchData(query).then((res) => {
+            fetchData(query.pageIndex, query.pageSize, query.searchContent).then((res) => {
                 tableData.value = res.list;
-                pageTotal.value = res.pageTotal || 50;
+                console.log(res)
             });
         };
         getData();
@@ -102,7 +91,6 @@ export default {
         };
         // 分页导航
         const handlePageChange = (val) => {
-            query.pageIndex = val;
             getData();
         };
 
@@ -122,31 +110,37 @@ export default {
         // 表格编辑时弹窗和保存
         const editVisible = ref(false);
         let form = reactive({
+            id: "",
             name: "",
-            address: "",
+            gender: "",
+            currentPage: "",
+            birthday: "",
+            idCard: ""
         });
-        let idx = -1;
         const handleEdit = (index, row) => {
-            idx = index;
             Object.keys(form).forEach((item) => {
                 form[item] = row[item];
             });
             editVisible.value = true;
         };
         const saveEdit = () => {
-            editVisible.value = false;
-            ElMessage.success(`修改第 ${idx + 1} 行成功`);
-            Object.keys(form).forEach((item) => {
-                tableData.value[idx][item] = form[item];
-            });
+            updateBasic(form).then(() => {
+                editVisible.value = false;
+                ElMessage.success(`编辑成功！`);
+            })
+            // axios.post( 'http://localhost:9999/basicemp',form).then(res => { 
+            //     editVisible.value = false;
+            //     ElMessage.success(`编辑成功！`);    
+            // });
         };
 
         return {
             query,
             tableData,
-            pageTotal,
             editVisible,
             form,
+
+
             handleSearch,
             handlePageChange,
             handleDelete,
