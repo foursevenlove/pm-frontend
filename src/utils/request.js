@@ -2,14 +2,9 @@ import axios from 'axios';
 
 
 const service = axios.create({
-    // process.env.NODE_ENV === 'development' 来判断是否开发环境
-    // easy-mock服务挂了，暂时不使用了
-    // baseURL: 'https://www.easy-mock.com/mock/592501a391470c0ac1fab128',
+    baseURL: 'http://localhost:9999',
     timeout: 5000,
-    headers: {'Content-Type': 'application/x-www-form-urlencoded'}
 });
-
-service.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded'; // 设置post提交数据的格式
 
 service.interceptors.request.use(
     config => {

@@ -9,8 +9,11 @@
                 <el-table-column prop="id" label="ID" width="55" align="center"></el-table-column>
                 <el-table-column prop="name" label="姓名" width="100" align="center"></el-table-column>
                 <el-table-column prop="gender" label="性别"  width="55" align="center"></el-table-column>
-                <el-table-column prop="birthday" label="出生日期" align="center"></el-table-column>
-                <el-table-column prop="idCard" label="身份证号" align="center"></el-table-column>
+                <el-table-column prop="nation" label="民族"  width="55" align="center"></el-table-column>
+                <el-table-column prop="phone" label="电话"  width="200" align="center"></el-table-column>
+                <el-table-column prop="email" label="邮箱"  width="200" align="center"></el-table-column>
+                <el-table-column prop="birthday" label="出生日期" width="140" align="center"></el-table-column>
+                <el-table-column prop="idCard" label="身份证号" width="200" align="center"></el-table-column>
 
                 <el-table-column label="操作" width="180" align="center">
                     <template #default="scope">
@@ -23,7 +26,7 @@
             </el-table>
             <div class="pagination">
                 <el-pagination background layout="total, prev, pager, next" v-model:currentPage="query.pageIndex"
-                    :page-size="query.pageSize" :total="2000" @current-change="handlePageChange"></el-pagination>
+                    :page-size="query.pageSize" :total="total" @current-change="handlePageChange"></el-pagination>
             </div>
         </div>
 
@@ -31,7 +34,7 @@
         <el-dialog title="编辑" v-model="editVisible" width="30%">
             <el-form label-width="70px">
                 <el-form-item label="编号">
-                    <el-input v-model="form.id" ></el-input>
+                    <el-input disabled v-model="form.id" ></el-input>
                 </el-form-item>
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" ></el-input>
@@ -41,6 +44,15 @@
                         <el-option key="男" label="男" value="男"/>
                         <el-option key="女" label="女" value="女"/>
                     </el-select>
+                </el-form-item>
+                <el-form-item label="民族">
+                    <el-input disabled v-model="form.nation"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                    <el-input v-model="form.phone"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="form.email"></el-input>
                 </el-form-item>
                 <el-form-item label="出生日期">
                     <el-input v-model="form.birthday"></el-input>
@@ -63,8 +75,6 @@
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
 import { fetchData, updateBasic } from "../../api/index";
-import axios from 'axios';
-// axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded;charset=UTF-8'; // 设置post提交数据的格式
 
 export default {
     name: "basetable",
@@ -75,10 +85,13 @@ export default {
             pageSize: 10,
         });
         const tableData = ref([]);
+        const total = ref(0);
+        const loading = ref(false);
         // 获取表格数据
         const getData = () => {
             fetchData(query.pageIndex, query.pageSize, query.searchContent).then((res) => {
                 tableData.value = res.list;
+                total.value = res.total;
                 console.log(res)
             });
         };
@@ -113,6 +126,9 @@ export default {
             id: "",
             name: "",
             gender: "",
+            nation: "",
+            phone: "",
+            email: "",
             currentPage: "",
             birthday: "",
             idCard: ""
@@ -124,14 +140,12 @@ export default {
             editVisible.value = true;
         };
         const saveEdit = () => {
+            console.log(form.birthday)
             updateBasic(form).then(() => {
                 editVisible.value = false;
                 ElMessage.success(`编辑成功！`);
+                getData(); 
             })
-            // axios.post( 'http://localhost:9999/basicemp',form).then(res => { 
-            //     editVisible.value = false;
-            //     ElMessage.success(`编辑成功！`);    
-            // });
         };
 
         return {
@@ -139,7 +153,8 @@ export default {
             tableData,
             editVisible,
             form,
-
+            loading,
+            total,
 
             handleSearch,
             handlePageChange,
