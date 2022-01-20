@@ -2,16 +2,24 @@ import request from '../utils/request';
 
 export const fetchData = (pageIndex, pageSize, searchContent) => {
     return request({
-        url: '/basicemp',
+        url: '/emp',
         method: 'get',
         params: {pageIndex, pageSize, searchContent}
     });
 };
 
-export const updateBasic = (basicemp) => {
+export const updateEmp = (emp) => {
     return request({
-        url: '/basicemp',
+        url: '/emp',
         method: 'post',
-        data: basicemp
+        data: emp
+    });
+};
+
+export const deleteEmp = (empId) => {
+    return request({
+        url: '/emp',
+        method: 'delete',
+        params: {empId}
     });
 };

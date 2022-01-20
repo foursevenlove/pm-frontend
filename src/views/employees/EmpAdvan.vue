@@ -6,19 +6,21 @@
                 <el-button type="primary" icon="el-icon-search" @click="handleSearch">搜索</el-button>
             </div>
             <el-table :data="tableData" border class="table" ref="multipleTable" header-cell-class-name="table-header">
-                <el-table-column fixed prop="name" label="姓名" width="110" align="center"></el-table-column>
-                <el-table-column prop="gender" label="性别"  width="50" align="center"></el-table-column>
-                <el-table-column prop="phone" label="电话"  width="200" align="center"></el-table-column>
-                <el-table-column prop="email" label="邮箱"  width="200" align="center"></el-table-column>
-                <el-table-column prop="birthday" label="出生日期" width="140" align="center"></el-table-column>
-                <el-table-column prop="idCard" label="身份证号" width="200" align="center"></el-table-column>
-                <el-table-column prop="school" label="毕业院校" width="200" align="center"></el-table-column>
-                <el-table-column prop="specialty" label="专业" width="200" align="center"></el-table-column>
+                <el-table-column fixed prop="name" label="姓名" width="100" align="center"></el-table-column>
+                <el-table-column prop="workID" label="工号"  width="150" align="center"></el-table-column>
+                <el-table-column prop="department" label="部门"  width="150" align="center"></el-table-column>
+                <el-table-column prop="position" label="岗位"  width="150" align="center"></el-table-column>
+                <el-table-column prop="jobLevel" label="职称等级"  width="150" align="center"></el-table-column>
+                <el-table-column prop="engageForm" label="聘用形式" width="150" align="center"></el-table-column>
+                <el-table-column prop="contractTerm" label="合同期限"  width="50" align="center"></el-table-column>
+                <el-table-column prop="beginDate" label="入职日期" width="150" align="center"></el-table-column>
+                <el-table-column prop="beginContract" label="合同起始日期" width="150" align="center"></el-table-column>
+                <el-table-column prop="endContract" label="合同终止日期" width="150" align="center"></el-table-column>
 
                 <el-table-column fixed="right" label="操作" width="180" align="center">
                     <template #default="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
-                        </el-button>
+                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
                             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
@@ -36,14 +38,11 @@
                 <el-form-item label="姓名">
                     <el-input v-model="form.name" ></el-input>
                 </el-form-item>
-                <el-form-item label="性别">
-                    <el-select v-model="form.gender">
-                        <el-option key="男" label="男" value="男"/>
-                        <el-option key="女" label="女" value="女"/>
-                    </el-select>
+                <el-form-item label="工号">
+                    <el-input v-model="form.workID" ></el-input>
                 </el-form-item>
-                <el-form-item label="电话">
-                    <el-input v-model="form.phone"></el-input>
+                <el-form-item label="部门">
+                    <el-input v-model="form.department"></el-input>
                 </el-form-item>
                 <el-form-item label="邮箱">
                     <el-input v-model="form.email"></el-input>
