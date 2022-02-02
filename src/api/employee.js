@@ -1,10 +1,10 @@
 import request from '../utils/request';
 
-export const fetchData = (pageIndex, pageSize, searchContent) => {
+export const fetchData = (pageIndex, pageSize, searchContent, politicId, nationId, jobLevelId, posId, engageForm) => {
     return request({
         url: '/emp',
         method: 'get',
-        params: {pageIndex, pageSize, searchContent}
+        params: {pageIndex, pageSize, searchContent, politicId, nationId, jobLevelId, posId, engageForm}
     });
 };
 

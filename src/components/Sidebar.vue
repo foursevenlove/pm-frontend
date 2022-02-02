@@ -47,10 +47,7 @@ export default {
                             index: "/basic",
                             title: "基本资料",
                         },
-                        {
-                            index: "/advanced",
-                            title: "高级资料",
-                        },
+                        
                 ],
             },
             {
@@ -58,6 +55,10 @@ export default {
                 index: "/",
                 title: "人事管理",
                 subs: [
+                        {
+                            index: "/advanced",
+                            title: "高级资料",
+                        },
                         {
                             index: "/basic",
                             title: "员工奖惩",

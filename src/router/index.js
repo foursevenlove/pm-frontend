@@ -32,7 +32,7 @@ const routes = [
                 meta: {
                     title: '高级资料'
                 },
-                component: () => import ( "../views/employees/EmpAdvan.vue")
+                component: () => import ( "../views/personnel/EmpAdvan.vue")
             }
         ]
     }, 

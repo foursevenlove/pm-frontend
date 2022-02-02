@@ -15,14 +15,14 @@
                 <el-table-column prop="school" label="毕业院校" width="200" align="center"></el-table-column>
                 <el-table-column prop="specialty" label="专业" width="200" align="center"></el-table-column>
 
-                <el-table-column fixed="right" label="操作" width="180" align="center">
+                <!-- <el-table-column fixed="right" label="操作" width="180" align="center">
                     <template #default="scope">
                         <el-button type="text" icon="el-icon-edit" @click="handleEdit(scope.$index, scope.row)">编辑
                         </el-button>
                         <el-button type="text" icon="el-icon-delete" class="red"
                             @click="handleDelete(scope.$index, scope.row)">删除</el-button>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
             <div class="pagination">
                 <el-pagination background layout="total, prev, pager, next" v-model:currentPage="query.pageIndex"
@@ -74,7 +74,7 @@
 <script>
 import { ref, reactive } from "vue";
 import { ElMessage, ElMessageBox } from "element-plus";
-import { fetchData, updateEmp, deleteEmp } from "../../api/index";
+import { fetchData, updateEmp, deleteEmp } from "../../api/employee";
 
 export default {
     name: "empBasic",
